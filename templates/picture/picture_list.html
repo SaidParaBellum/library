@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block style %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+        margin: 0;
+        padding: 20px;
+    }
+
+    .picture-container {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin-bottom: 20px;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .picture-container a {
+        text-decoration: none;
+        color: #007bff;
+        font-size: 1.2em;
+        font-weight: bold;
+    }
+
+    .picture-container a:hover {
+        text-decoration: underline;
+    }
+
+    .picture-container p {
+        margin: 10px 0;
+        color: #555;
+    }
+
+    .picture-container img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 4px;
+        margin-top: 10px;
+    }
+
+    .picture-actions {
+        margin-top: 10px;
+    }
+
+    .picture-actions button {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s;
+        margin-right: 10px;
+    }
+
+    .picture-actions button:hover {
+        background-color: #0056b3;
+    }
+
+    .picture-actions form {
+        display: inline;
+    }
+
+    .pagination {
+        text-align: center;
+        margin: 20px 0;
+    }
+
+    .pagination a {
+        text-decoration: none;
+        color: #007bff;
+        padding: 10px 20px;
+        border-radius: 4px;
+        margin: 0 5px;
+        transition: background-color 0.3s;
+    }
+
+    .pagination a:hover {
+        background-color: #f1f1f1;
+    }
+
+    .pagination .current {
+        background-color: #007bff;
+        color: #fff;
+        padding: 10px 20px;
+    }
+</style>
+{% endblock style %}
+
+{% block title %} Pictures {% endblock title %}
+
+{% block content %}
+    {% for picture in pictures %}
+        <div class="picture-container">
+            <a href="{% url 'detail_picture' picture.id %}">{{ picture.name }}</a>
+            <p>Year: {{ picture.year }}</p>
+            {% if picture.picture %}
+                <img src="{{ picture.picture.url }}" alt="{{ picture.name }}">
+            {% else %}
+                <p>No image available</p>
+            {% endif %}
+            <div class="picture-actions">
+                <form action="{% url 'update_picture' picture.id %}" method="GET">
+                    <button type="submit">Update</button>
+                </form>
+                <form action="{% url 'delete_picture' picture.id %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit">Delete</button>
+                </form>
+            </div>
+        </div>
+    {% endfor %}
+
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}&limit={{ limit }}"><<<</a>
+        {% endif %}
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}&limit={{ limit }}">>>></a>
+        {% endif %}
+
+        {% if page_obj.number > 2 %}
+            <a href="?page=1&limit={{ limit }}">First Page</a>
+        {% endif %}
+    </div>
+
+    <p>{{ now }}</p>
+{% endblock content %}

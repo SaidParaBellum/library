@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block style %}
+    <style>
+        .video-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        .video-item {
+            background: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 320px;
+            margin-bottom: 20px;
+        }
+        .video-item a {
+            display: block;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            text-decoration: none;
+            padding: 10px;
+            background: #fff;
+            border-bottom: 1px solid #ddd;
+        }
+        .video-item a:hover {
+            background: #f1f1f1;
+        }
+        .video-item p {
+            text-align: center;
+            color: #666;
+            padding: 0 10px;
+        }
+        video {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-bottom: 1px solid #ddd;
+        }
+        .video-controls {
+            display: flex;
+            justify-content: space-around;
+            padding: 10px;
+        }
+        .video-controls form {
+            margin: 0;
+        }
+        .button {
+            background: #007bff;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s ease;
+        }
+        .button:hover {
+            background: #0056b3;
+        }
+        .pagination {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .pagination a {
+            color: #007bff;
+            text-decoration: none;
+            font-size: 16px;
+            margin: 0 5px;
+        }
+        .pagination a:hover {
+            text-decoration: underline;
+        }
+        .pagination a.disabled {
+            color: #ccc;
+            pointer-events: none;
+        }
+    </style>
+{% endblock style %}
+
+{% block title %} Videos {% endblock title %}
+
+{% block content %}
+    <div class="video-container">
+        {% for video in videos %}
+            <div class="video-item">
+                <a href="{% url 'detail_video' video.id %}">{{ video.name }}</a>
+                <p>{{ video.date_time|date:"Y" }}</p>
+                {% if video.video_file %}
+                    <video controls>
+                        <source src="{{ video.video_file.url }}" type="video/mp4">
+                        <source src="{{ video.video_file.url }}" type="video/quicktime">
+                        Your browser does not support the video tag.
+                    </video>
+                {% else %}
+                    <p>Видео недоступно</p>
+                {% endif %}
+                <div class="video-controls">
+                    <form action="{% url 'update_video' video.id %}" method="GET">
+                        <button class="button">Update</button>
+                    </form>
+                    <form action="{% url 'delete_video' video.id %}" method="POST">
+                        {% csrf_token %}
+                        <button class="button">Delete</button>
+                    </form>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <br><br>
+    {{ now }}
+
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}&limit={{ limit }}"><<<</a>
+        {% endif %}
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}&limit={{ limit }}">>>></a>
+        {% endif %}
+
+        {% if page_obj.number > 2 %}
+            <a href="?page=1&limit={{ limit }}">First Page</a>
+        {% endif %}
+    </div>
+{% endblock content %}

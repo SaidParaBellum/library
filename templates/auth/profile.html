@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+
+{% block title %}Профиль{% endblock title %}
+
+{% block content %}
+<div class="profile-container">
+    <h1 class="profile-header">Профиль {{ user.username }}</h1>
+
+    <div class="favorites-section">
+        <h2 class="section-title">Избранные книги</h2>
+        <ul class="favorites-list">
+            {% for favorite in favorite_books %}
+                <li class="favorites-item">
+                    {{ favorite.book.name }} <span class="author">({{ favorite.book.author }})</span>
+                </li>
+            {% empty %}
+                <li class="favorites-item empty">Нет избранных книг.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="favorites-section">
+        <h2 class="section-title">Избранная музыка</h2>
+        <ul class="favorites-list">
+            {% for favorite in favorite_music %}
+                <li class="favorites-item">
+                    {{ favorite.music.name }} <span class="year">({{ favorite.music.year }})</span>
+                </li>
+            {% empty %}
+                <li class="favorites-item empty">Нет избранной музыки.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="favorites-section">
+        <h2 class="section-title">Избранные видео</h2>
+        <ul class="favorites-list">
+            {% for favorite in favorite_videos %}
+                <li class="favorites-item">
+                    {{ favorite.video.name }} <span class="date">({{ favorite.video.created_at|date:"Y-m-d" }})</span>
+                </li>
+            {% empty %}
+                <li class="favorites-item empty">Нет избранных видео.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="favorites-section">
+        <h2 class="section-title">Избранные картинки</h2>
+        <ul class="favorites-list">
+            {% for favorite in favorite_pictures %}
+                <li class="favorites-item">
+                    {{ favorite.picture.name }}
+                </li>
+            {% empty %}
+                <li class="favorites-item empty">Нет избранных картинок.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock content %}
+
+{% block style %}
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f9f9f9;
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
+
+    .profile-container {
+        max-width: 900px;
+        margin: 50px auto;
+        padding: 30px;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .profile-header {
+        font-size: 2.5em;
+        color: #2c3e50;
+        text-align: center;
+        margin-bottom: 30px;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+    }
+
+    .favorites-section {
+        margin-bottom: 30px;
+    }
+
+    .section-title {
+        font-size: 2em;
+        color: #3498db;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 10px;
+        margin-bottom: 15px;
+        text-align: center;
+    }
+
+    .favorites-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .favorites-item {
+        background-color: #ffffff;
+        padding: 10px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: background-color 0.3s, transform 0.3s;
+    }
+
+    .favorites-item:hover {
+        background-color: #f0f8ff;
+        transform: translateY(-3px);
+    }
+
+    .favorites-item.empty {
+        text-align: center;
+        font-style: italic;
+        color: #e74c3c;
+    }
+
+    .favorites-item .author,
+    .favorites-item .year,
+    .favorites-item .date {
+        color: #7f8c8d;
+        font-size: 0.9em;
+    }
+</style>
+{% endblock style %}

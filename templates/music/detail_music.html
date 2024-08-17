@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block style %}
+<style>
+    body {
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+        background-color: #f5f5f5;
+        color: #2c3e50;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 30px;
+        background-color: #ffffff;
+        border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        animation: fadeIn 0.8s ease-in-out;
+    }
+
+    .music_name {
+        font-size: 2.8em;
+        margin-bottom: 20px;
+        color: #34495e;
+        letter-spacing: 1px;
+        animation: slideInFromLeft 0.7s ease-out;
+    }
+
+    audio {
+        width: 100%;
+        margin: 20px 0;
+        border-radius: 10px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+    audio:hover {
+        transform: scale(1.05);
+    }
+
+    p {
+        font-size: 1.2em;
+        color: #e74c3c;
+        margin: 20px 0;
+        animation: fadeIn 1s ease-in;
+    }
+
+    button {
+        background-color: #3498db;
+        color: #ffffff;
+        border: none;
+        padding: 12px 25px;
+        font-size: 1em;
+        font-weight: 600;
+        border-radius: 8px;
+        cursor: pointer;
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        transition: background-color 0.3s ease, transform 0.2s, box-shadow 0.3s;
+        margin: 10px 5px;
+    }
+
+    button:hover {
+        background-color: #2980b9;
+        transform: translateY(-3px);
+        box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    button:focus {
+        outline: none;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes slideInFromLeft {
+        from { transform: translateX(-100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+</style>
+{% endblock style %}
+
+{% block title %}About Music{% endblock title %}
+
+{% block content %}
+<div class="container">
+    <h1 class="music_name">{{ music.name }}</h1>
+
+    {% if music.music_file %}
+        <audio controls>
+            <source src="{{ music.music_file.url }}" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+    {% else %}
+        <p>Аудиофайл отсутствует.</p>
+    {% endif %}
+
+    <form action="{% url 'music_list' %}">
+        <button>Назад</button>
+    </form>
+
+    <form action="{% url 'add_music_to_favorites' music.id %}" method="POST">
+        {% csrf_token %}
+        <button type="submit">Добавить в избранное</button>
+    </form>
+</div>
+{% endblock content %}

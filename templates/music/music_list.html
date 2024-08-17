@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block style %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+        margin: 0;
+        padding: 20px;
+    }
+
+    .music-container {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin-bottom: 20px;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .music-container a {
+        text-decoration: none;
+        color: #007bff;
+        font-size: 1.2em;
+        font-weight: bold;
+    }
+
+    .music-container a:hover {
+        text-decoration: underline;
+    }
+
+    .music-container p {
+        margin: 10px 0;
+        color: #555;
+    }
+
+    .music-actions {
+        margin-top: 10px;
+    }
+
+    .music-actions button {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s;
+        margin-right: 10px;
+    }
+
+    .music-actions button:hover {
+        background-color: #0056b3;
+    }
+
+    .music-actions form {
+        display: inline;
+    }
+
+    .pagination {
+        text-align: center;
+        margin: 20px 0;
+    }
+
+    .pagination a {
+        text-decoration: none;
+        color: #007bff;
+        padding: 10px 20px;
+        border-radius: 4px;
+        margin: 0 5px;
+        transition: background-color 0.3s;
+    }
+
+    .pagination a:hover {
+        background-color: #f1f1f1;
+    }
+
+    .pagination .current {
+        background-color: #007bff;
+        color: #fff;
+        padding: 10px 20px;
+    }
+</style>
+{% endblock style %}
+
+{% block title %} Music {% endblock title %}
+
+{% block content %}
+    {% for music in musics %}
+        <div class="music-container">
+            <a href="{% url 'detail_music' music.id %}">{{ music.name }}</a>
+            <p>Year: {{ music.year }}</p>
+            <div class="music-actions">
+                <form action="{% url 'update_music' music.id %}" method="GET">
+                    <button type="submit">Обновить</button>
+                </form>
+                <form action="{% url 'delete_music' music.id %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit">Удалить</button>
+                </form>
+            </div>
+        </div>
+    {% endfor %}
+
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}&limit={{ limit }}"><<<</a>
+        {% endif %}
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}&limit={{ limit }}">>>></a>
+        {% endif %}
+
+        {% if page_obj.number > 2 %}
+            <a href="?page=1&limit={{ limit }}">На первую страницу</a>
+        {% endif %}
+    </div>
+
+    <p>{{ now }}</p>
+{% endblock content %}

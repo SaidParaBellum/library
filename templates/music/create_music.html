@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block style %}
+{% endblock style %}
+{% block title %} Main Page {% endblock title %}
+{% block content %}
+<form action="" method="post">
+    {% csrf_token %}
+    {{form}}
+    <input type="submit" value="create">
+</form>
+
+{% endblock content %}
